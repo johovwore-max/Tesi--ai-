@@ -10,12 +10,33 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    return res.status(200).json({
-      reply: `TESI received: ${message}`
+    const response = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-6-luna",
+        input: message
+      })
     });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: data.error?.message || "OpenAI request failed"
+      });
+    }
+
+    return res.status(200).json({
+      reply: data.output_text || "TESI could not generate a response."
+    });
+
   } catch (error) {
     return res.status(500).json({
-      error: "TESI backend error"
+      error: "TESI AI backend error"
     });
   }
 }
