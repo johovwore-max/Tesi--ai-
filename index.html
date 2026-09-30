@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#050907">
 <link rel="manifest" href="manifest.json">
 <title>TESI AI</title>
-<style>
+no<style>
 :root{--bg:#050907;--panel:#0b120f;--line:#16352a;--green:#18e889;--muted:#8aa99b}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#0d3023 0,#050907 42%);color:#eafff4;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif}
 .app{max-width:560px;margin:auto;min-height:100vh;padding:env(safe-area-inset-top) 16px calc(20px + env(safe-area-inset-bottom))}
@@ -44,6 +44,18 @@ function saveMem(){let x=$('mem').value.trim();if(!x)return;let m=JSON.parse(loc
 function renderMem(){$('mems').innerHTML=(JSON.parse(localStorage.mem||'[]')).map(x=>'<div class="log">'+x+'</div>').join('')}
 function demo(){if(!running){$('reply').textContent='Start TESI first.';return}let n=300; $('count').textContent='5:00';log('Safe operation proposed — veto window started');if(timer)clearInterval(timer);timer=setInterval(()=>{n--;let m=Math.floor(n/60),s=String(n%60).padStart(2,'0');$('count').textContent=m+':'+s;if(n<=0){clearInterval(timer);$('count').textContent='ACTED';log('Safe simulated operation executed after timeout')}},1000)}
 renderLogs();renderMem();
-if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');async function sendToTesi(message) {
+  const response = await fetch("https://tesi-ai-api.vercel.app/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ message })
+  });
+
+  const data = await response.json();
+
+  return data.reply || data.error || "TESI could not respond.";
+}
 </script>
 </body></html>
