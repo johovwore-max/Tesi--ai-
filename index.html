@@ -38,7 +38,26 @@ function log(x){let a=JSON.parse(localStorage.logs||'[]');a.unshift(new Date().t
 function renderLogs(){$('logs').innerHTML=(JSON.parse(localStorage.logs||'[]')).map(x=>'<div class="log">'+x+'</div>').join('')}
 function start(){running=true;$('status').textContent='TESI ACTIVE';log('TESI started')}
 function stop(){running=false;if(timer)clearInterval(timer);$('count').textContent='—';$('status').textContent='STOPPED';log('TESI stopped')}
-function ask(){let c=$('cmd').value.trim();if(!c)return;$('reply').textContent=running?'TESI received: '+c:'Start TESI first.';log('Command received')}
+async function ask(){
+  let c=$('cmd').value.trim();
+  if(!c)return;
+  if(!running){
+    $('reply').textContent='Start TESI first.';
+    return;
+  }
+
+  $('reply').textContent='TESI is thinking...';
+  log('Command sent to TESI AI');
+
+  try{
+    const reply=await sendToTesi(c);
+    $('reply').textContent=reply;
+    log('TESI responded');
+  }catch(error){
+    $('reply').textContent='TESI could not connect to its AI backend.';
+    log('AI backend connection failed');
+  }
+}
 function tab(id){['home','memory','tasks','devices'].forEach(x=>$(x).classList.toggle('hidden',x!==id));if(id==='memory')renderMem()}
 function saveMem(){let x=$('mem').value.trim();if(!x)return;let m=JSON.parse(localStorage.mem||'[]');m.unshift(x);localStorage.mem=JSON.stringify(m);$('mem').value='';renderMem();log('Memory saved')}
 function renderMem(){$('mems').innerHTML=(JSON.parse(localStorage.mem||'[]')).map(x=>'<div class="log">'+x+'</div>').join('')}
