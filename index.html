@@ -7,13 +7,472 @@
 <link rel="manifest" href="manifest.json">
 <title>TESI AI</title>
 <style>
-:root{--bg:#050907;--panel:#0b120f;--line:#16352a;--green:#18e889;--muted:#8aa99b}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#0d3023 0,#050907 42%);color:#eafff4;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif}
-.app{max-width:560px;margin:auto;min-height:100vh;padding:env(safe-area-inset-top) 16px calc(20px + env(safe-area-inset-bottom))}
-header{display:flex;align-items:center;justify-content:space-between;padding:18px 0}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:2px}.logo{width:38px;height:38px;border:1px solid #1de98b;border-radius:12px;display:grid;place-items:center;color:#18e889;font-weight:900;font-size:22px;box-shadow:0 0 25px #18e88933}
-.status{font-size:12px;color:var(--muted)}.orb{width:190px;height:190px;margin:25px auto;border-radius:50%;display:grid;place-items:center;border:1px solid #20ef9233;background:radial-gradient(circle,#20ef9240 0,#0a241a 42%,#050907 70%);box-shadow:0 0 55px #18e88933}.orb b{font-size:42px;color:#18e889;text-shadow:0 0 25px #18e889}
-.card{background:#09110eeb;border:1px solid var(--line);border-radius:20px;padding:16px;margin:12px 0;box-shadow:0 12px 35px #0008}.row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}.muted{color:var(--muted);font-size:13px}.title{font-weight:750}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}button{border:1px solid #205a43;background:#0c1c15;color:#eafff4;border-radius:14px;padding:14px;font-weight:700;font-size:15px}button.primary{background:#12a960;border-color:#20ef92;color:#00160c}button.stop{background:#301414;border-color:#713535}.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:14px 0}.tabs button{padding:10px 5px;font-size:11px}.hidden{display:none}.pill{padding:5px 8px;border-radius:99px;background:#0d2419;color:#53f2aa;font-size:11px}.log{padding:9px 0;border-bottom:1px solid #123025;font-size:13px}
-textarea,input{width:100%;background:#07100d;border:1px solid #17392c;color:white;border-radius:13px;padding:12px;font:inherit}.count{font-size:28px;font-weight:800;color:#18e889}
+:root{
+  --bg:#050706;
+  --surface:#0b100e;
+  --surface-2:#101713;
+  --surface-3:#151d18;
+  --line:#202b25;
+  --line-active:#2b4035;
+
+  --green:#19e887;
+  --green-bright:#45f5a5;
+  --green-dark:#0d9f5b;
+
+  --text:#f2f7f4;
+  --text-soft:#c4cec8;
+  --muted:#7f8c85;
+
+  --danger:#e05d5d;
+
+  --radius:18px;
+  --radius-small:12px;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  background:var(--bg);
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(
+      circle at 50% -15%,
+      rgba(25,232,135,.10),
+      transparent 38%
+    ),
+    var(--bg);
+  color:var(--text);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    Inter,
+    sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+button,
+textarea,
+input{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+  transition:
+    transform .18s ease,
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+button:active{
+  transform:scale(.97);
+}
+
+.app{
+  width:100%;
+  max-width:620px;
+  min-height:100vh;
+  margin:auto;
+  padding:
+    env(safe-area-inset-top)
+    18px
+    calc(28px + env(safe-area-inset-bottom));
+}
+
+/* HEADER */
+
+header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:20px 2px 16px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  font-weight:800;
+  letter-spacing:1.8px;
+  font-size:15px;
+}
+
+.logo{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+
+  border:1px solid rgba(25,232,135,.55);
+  border-radius:13px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(25,232,135,.13),
+      rgba(25,232,135,.025)
+    );
+
+  color:var(--green);
+  font-size:21px;
+  font-weight:900;
+
+  box-shadow:
+    0 0 22px rgba(25,232,135,.10),
+    inset 0 0 15px rgba(25,232,135,.04);
+}
+
+.status{
+  display:flex;
+  align-items:center;
+  gap:7px;
+
+  color:var(--muted);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.1px;
+}
+
+.status::before{
+  content:"";
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#46534c;
+}
+
+/* TESI CORE */
+
+.card{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(17,24,20,.96),
+      rgba(8,13,11,.96)
+    );
+
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+
+  padding:20px;
+  margin:12px 0;
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.28);
+}
+
+.card:hover{
+  border-color:var(--line-active);
+}
+
+.orb{
+  position:relative;
+
+  width:190px;
+  height:190px;
+
+  margin:26px auto 24px;
+
+  display:grid;
+  place-items:center;
+
+  border-radius:50%;
+
+  border:1px solid rgba(25,232,135,.22);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(25,232,135,.16) 0%,
+      rgba(25,232,135,.06) 32%,
+      rgba(8,20,14,.9) 65%,
+      rgba(5,7,6,1) 72%
+    );
+
+  box-shadow:
+    0 0 70px rgba(25,232,135,.09),
+    inset 0 0 45px rgba(25,232,135,.06);
+}
+
+.orb::before{
+  content:"";
+  position:absolute;
+  inset:-9px;
+
+  border-radius:50%;
+
+  border:1px solid rgba(25,232,135,.07);
+}
+
+.orb b{
+  color:var(--green);
+  font-size:48px;
+  font-weight:900;
+
+  text-shadow:
+    0 0 25px rgba(25,232,135,.35);
+}
+
+.title{
+  font-size:17px;
+  font-weight:750;
+}
+
+.muted{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.55;
+}
+
+.buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:18px;
+}
+
+button{
+  border:1px solid var(--line-active);
+  background:var(--surface-2);
+  color:var(--text);
+
+  border-radius:13px;
+  padding:13px 15px;
+
+  font-weight:700;
+  font-size:14px;
+}
+
+button:hover{
+  background:var(--surface-3);
+  border-color:#385345;
+}
+
+button.primary{
+  background:var(--green);
+  border-color:var(--green);
+  color:#031008;
+
+  box-shadow:
+    0 8px 25px rgba(25,232,135,.12);
+}
+
+button.primary:hover{
+  background:var(--green-bright);
+}
+
+/* 🔴 STOP BUTTON */
+
+button.stop{
+  background:rgba(224,45,45,.14);
+  border:1px solid rgba(255,75,75,.55);
+  color:#ff8585;
+
+  box-shadow:
+    0 0 18px rgba(224,45,45,.06);
+}
+
+button.stop:hover{
+  background:rgba(224,45,45,.24);
+  border-color:#ff6666;
+  color:#ffb0b0;
+}
+
+/* NAVIGATION */
+
+.tabs{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:5px;
+
+  margin:14px 0;
+  padding:5px;
+
+  background:#090d0b;
+  border:1px solid var(--line);
+  border-radius:15px;
+}
+
+.tabs button{
+  padding:10px 4px;
+
+  border:0;
+  background:transparent;
+
+  color:var(--muted);
+
+  border-radius:10px;
+
+  font-size:10px;
+  font-weight:700;
+}
+
+.tabs button:hover{
+  background:var(--surface-2);
+  color:var(--text);
+}
+
+/* CONTENT */
+
+.row{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.between{
+  justify-content:space-between;
+}
+
+.hidden{
+  display:none;
+}
+
+.pill{
+  padding:5px 9px;
+
+  border-radius:999px;
+
+  background:rgba(25,232,135,.07);
+  border:1px solid rgba(25,232,135,.12);
+
+  color:var(--green);
+
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.4px;
+}
+
+.log{
+  padding:11px 0;
+
+  border-bottom:1px solid #16201b;
+
+  color:var(--text-soft);
+
+  font-size:12px;
+  line-height:1.5;
+}
+
+/* INPUT */
+
+textarea,
+input{
+  width:100%;
+
+  background:#080d0a;
+
+  border:1px solid var(--line);
+
+  color:var(--text);
+
+  border-radius:14px;
+
+  padding:13px;
+
+  outline:none;
+
+  resize:none;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+textarea:focus,
+input:focus{
+  border-color:rgba(25,232,135,.45);
+
+  box-shadow:
+    0 0 0 3px rgba(25,232,135,.06);
+}
+
+textarea::placeholder,
+input::placeholder{
+  color:#59665f;
+}
+
+.count{
+  font-size:28px;
+  font-weight:800;
+  color:var(--green);
+}
+
+/* TESI LIGHT STATES */
+
+@keyframes tesiListening{
+  0%,100%{
+    opacity:.45;
+    box-shadow:0 0 8px rgba(25,232,135,.15);
+  }
+
+  50%{
+    opacity:1;
+    box-shadow:0 0 18px rgba(25,232,135,.55);
+  }
+}
+
+@keyframes tesiThinking{
+  0%,100%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.025);
+  }
+}
+
+.tesi-listening{
+  animation:tesiListening 1.2s ease-in-out infinite;
+}
+
+.tesi-thinking{
+  animation:tesiThinking 1.5s ease-in-out infinite;
+}
+
+/* MOBILE */
+
+@media(max-width:420px){
+
+  .app{
+    padding-left:14px;
+    padding-right:14px;
+  }
+
+  .orb{
+    width:165px;
+    height:165px;
+  }
+
+  .orb b{
+    font-size:42px;
+  }
+
+  .tabs button{
+    font-size:9px;
+  }
+}
+
+/* REDUCED MOTION */
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *::before,
+  *::after{
+    animation:none !important;
+    transition:none !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -23,13 +482,187 @@ textarea,input{width:100%;background:#07100d;border:1px solid #17392c;color:whit
 <div class="orb"><b>T</b></div><div class="title">TESI Intelligence Core</div><div class="muted">Reason • Remember • Plan • Verify</div>
 <div class="buttons"><button class="primary" onclick="start()">START</button><button class="stop" onclick="stop()">STOP</button></div>
 </section>
-<div class="tabs">
-<button onclick="tab('home')">Home</button><button onclick="tab('memory')">Memory</button><button onclick="tab('tasks')">Tasks</button><button onclick="tab('devices')">Devices</button>
+
+<!-- TESI INTELLIGENCE SYSTEMS -->
+
+<section class="card">
+  <div class="title">TESI Intelligence</div>
+  <p class="muted">Select a core system</p>
+
+  <div class="buttons">
+    <button onclick="core('cognitive')">Cognitive</button>
+    <button onclick="core('predictive')">Predictive</button>
+    <button onclick="core('perceptive')">Perceptive</button>
+    <button onclick="core('agentic')">Agentic</button>
+    <button onclick="core('autonomous')">Autonomous</button>
+  </div>
+</section>
+
+<!-- COGNITIVE -->
+
+<section id="cognitive" class="card hidden">
+  <div class="row between">
+    <div class="title">Cognitive</div>
+    <span class="pill">THINK</span>
+  </div>
+
+  <p class="muted">Think, understand, reason and communicate.</p>
+
+<textarea id="cmd" rows="4" placeholder="Talk to TESI..."></textarea>
+
+<button class="primary" style="width:100%;margin-top:10px" onclick="ask()">
+  Ask TESI
+</button>
+
+<div class="log" id="reply">TESI is waiting.</div>
+
+<div class="log">Conversation</div>
+<div class="log">Knowledge</div>
+<div class="log">Learning</div>
+<div class="log">Creation</div>
+<div class="log">Reasoning</div>
+</section>
+
+<!-- PREDICTIVE -->
+
+<section id="predictive" class="card hidden">
+  <div class="row between">
+    <div class="title">Predictive</div>
+    <span class="pill">PREDICT</span>
+  </div>
+
+  <p class="muted">Forecast conditions, identify patterns and anticipate risk.</p>
+
+<div class="log">Forecast</div>
+
+<div class="log">
+  <b>Climate</b>
+  <div class="muted">Climate Change</div>
+  <div class="muted">Temperature Trends</div>
+  <div class="muted">Rainfall Changes</div>
+  <div class="muted">Extreme Events</div>
+  <div class="muted">Emissions</div>
+  <div class="muted">Environmental Impact</div>
 </div>
-<section id="home" class="card"><div class="title">Command</div><textarea id="cmd" rows="3" placeholder="Tell TESI what you want..."></textarea><button class="primary" style="width:100%;margin-top:10px" onclick="ask()">Ask TESI</button><p class="muted" id="reply">TESI is waiting.</p></section>
-<section id="memory" class="card hidden"><div class="row between"><div class="title">Persistent Memory</div><span class="pill">LOCAL</span></div><input id="mem" placeholder="Add a memory"><button style="width:100%;margin-top:10px" onclick="saveMem()">Save memory</button><div id="mems"></div></section>
-<section id="tasks" class="card hidden"><div class="row between"><div class="title">Autonomous Operations</div><span class="pill">VETO WINDOW</span></div><p class="muted">For simulated operations, TESI notifies the owner and starts a countdown. Safety-critical actions require explicit confirmation and are not automatically executed.</p><div class="count" id="count">—</div><button style="width:100%" onclick="demo()">Run safe demo</button></section>
-<section id="devices" class="card hidden"><div class="title">Connected Devices</div><div class="log">Home hub <span class="pill">SIMULATED</span></div><div class="log">Robot controller <span class="pill">SIMULATED</span></div><div class="log">Owner watch <span class="pill">ALERT ONLY</span></div><p class="muted">Real hardware requires a separately configured and safety-validated controller.</p></section>
+
+<div class="log">Risk</div>
+<div class="log">Environmental Change</div>
+<div class="log">Early Warning</div>
+</section>
+
+<!-- PERCEPTIVE -->
+
+<section id="perceptive" class="card hidden">
+  <div class="row between">
+    <div class="title">Perceptive</div>
+    <span class="pill">PERCEIVE</span>
+  </div>
+
+  <p class="muted">See, hear and understand the surrounding environment.</p>
+
+<div class="log">
+  <b>Vision</b>
+  <div class="muted">Image Understanding</div>
+  <div class="muted">Object Detection</div>
+  <div class="muted">Text Recognition</div>
+</div>
+
+<div class="log">
+  <b>Environment</b>
+  <div class="muted">Scene Understanding</div>
+  <div class="muted">Hazard Detection</div>
+  <div class="muted">Navigation Assistance</div>
+</div>
+
+<div class="log">
+  <b>Audio</b>
+  <div class="muted">Speech</div>
+  <div class="muted">Sound Recognition</div>
+</div>
+
+<div class="log">
+  <b>Accessibility</b>
+  <div class="muted">Visual Assistance</div>
+  <div class="muted">Environmental Description</div>
+</div>
+</section>
+
+<!-- AGENTIC -->
+
+<section id="agentic" class="card hidden">
+  <div class="row between">
+    <div class="title">Agentic</div>
+    <span class="pill">ACT</span>
+  </div>
+
+ <p class="muted">Plan and perform authorized actions.</p>
+
+<div class="log">
+  <b>Tasks</b>
+  <div class="muted">Create</div>
+  <div class="muted">Execute</div>
+  <div class="muted">Track</div>
+</div>
+
+<div class="log">
+  <b>Devices</b>
+  <div class="muted">Phone</div>
+  <div class="muted">Computer</div>
+  <div class="muted">Smart Devices</div>
+</div>
+
+<div class="log">
+  <b>Communication</b>
+  <div class="muted">Messages</div>
+  <div class="muted">Email</div>
+  <div class="muted">Calls</div>
+</div>
+
+<div class="log">
+  <b>Accessibility</b>
+  <div class="muted">Voice Control</div>
+  <div class="muted">Hands-Free Control</div>
+  <div class="muted">Assistive Actions</div>
+</div>
+</section>
+
+<!-- AUTONOMOUS -->
+
+<section id="autonomous" class="card hidden">
+  <div class="row between">
+    <div class="title">Autonomous</div>
+    <span class="pill">ADAPT</span>
+  </div>
+
+  <p class="muted">Monitor, automate and adapt within defined boundaries.</p>
+
+<div class="log">
+  <b>Automation</b>
+  <div class="muted">Scheduled Actions</div>
+  <div class="muted">Repeated Tasks</div>
+</div>
+
+<div class="log">
+  <b>Monitoring</b>
+  <div class="muted">Watch</div>
+  <div class="muted">Detect</div>
+  <div class="muted">Alert</div>
+</div>
+
+<div class="log">
+  <b>Decision Support</b>
+  <div class="muted">Evaluate</div>
+  <div class="muted">Recommend Actions</div>
+  <div class="muted">Request Authorization</div>
+</div>
+
+<div class="log">
+  <b>Self-Management</b>
+  <div class="muted">Learn Preferences</div>
+  <div class="muted">Adapt</div>
+  <div class="muted">Maintain Context</div>
+</div>
+</section>
 <section class="card"><div class="title">Activity</div><div id="logs"></div></section>
 </div>
 <script>
@@ -37,7 +670,7 @@ const $=id=>document.getElementById(id); let timer=null, running=false;
 function log(x){let a=JSON.parse(localStorage.logs||'[]');a.unshift(new Date().toLocaleTimeString()+" — "+x);localStorage.logs=JSON.stringify(a.slice(0,30));renderLogs()}
 function renderLogs(){$('logs').innerHTML=(JSON.parse(localStorage.logs||'[]')).map(x=>'<div class="log">'+x+'</div>').join('')}
 function start(){running=true;$('status').textContent='TESI ACTIVE';log('TESI started')}
-function stop(){running=false;if(timer)clearInterval(timer);$('count').textContent='—';$('status').textContent='STOPPED';log('TESI stopped')}
+function stop(){running=false;if(timer)clearInterval(timer);$('status').textContent='STOPPED';log('TESI stopped')}
 async function ask(){
   let c=$('cmd').value.trim();
   if(!c)return;
@@ -58,11 +691,25 @@ async function ask(){
     log('AI backend connection failed');
   }
 }
-function tab(id){['home','memory','tasks','devices'].forEach(x=>$(x).classList.toggle('hidden',x!==id));if(id==='memory')renderMem()}
+function core(id){
+  const cores = [
+    'cognitive',
+    'predictive',
+    'perceptive',
+    'agentic',
+    'autonomous'
+  ];
+
+  cores.forEach(x => {
+    $(x).classList.toggle('hidden', x !== id);
+  });
+
+  log('TESI core selected — ' + id.toUpperCase());
+}
 function saveMem(){let x=$('mem').value.trim();if(!x)return;let m=JSON.parse(localStorage.mem||'[]');m.unshift(x);localStorage.mem=JSON.stringify(m);$('mem').value='';renderMem();log('Memory saved')}
 function renderMem(){$('mems').innerHTML=(JSON.parse(localStorage.mem||'[]')).map(x=>'<div class="log">'+x+'</div>').join('')}
 function demo(){if(!running){$('reply').textContent='Start TESI first.';return}let n=300; $('count').textContent='5:00';log('Safe operation proposed — veto window started');if(timer)clearInterval(timer);timer=setInterval(()=>{n--;let m=Math.floor(n/60),s=String(n%60).padStart(2,'0');$('count').textContent=m+':'+s;if(n<=0){clearInterval(timer);$('count').textContent='ACTED';log('Safe simulated operation executed after timeout')}},1000)}
-renderLogs();renderMem();
+renderLogs();
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');async function sendToTesi(message) {
   const response = await fetch("https://tesi-backend.vercel.app/api/chat", {
     method: "POST",
