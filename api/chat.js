@@ -36,7 +36,7 @@ export default async function handler(req, res) {
 
   } catch (error) {
     return res.status(500).json({
-      error: "TESI AI backend error"
+      error: error.message || "TESI AI backend error"
     });
   }
 }
